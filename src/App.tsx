@@ -81,9 +81,24 @@ const App = () => {
     }
   };
   
+  // 簡繁轉換函數
+  const convertToSimplified = (text: string): string => {
+    const traditionalToSimplified: { [key: string]: string } = {
+      '會': '会', '啟': '启', '請': '请', '護': '护', '念': '念', '囑': '嘱', '發': '发', '應': '应', '住': '住', '降': '降', '伏': '伏', '諦': '谛', '願': '愿', '樂': '乐', '聞': '闻',
+      '眾': '众', '著': '着', '缽': '钵', '訖': '讫', '腳': '脚', '敷': '敷', '座': '座', '坐': '坐', '時': '时', '從': '从', '起': '起', '偏': '偏', '袒': '袒', '肩': '肩', '膝': '膝', '地': '地', '合': '合', '掌': '掌', '恭': '恭', '敬': '敬', '白': '白', '佛': '佛', '言': '言', '希': '希', '有': '有', '世': '世', '尊': '尊', '如': '如', '來': '来', '善': '善', '諸': '诸', '菩': '菩', '薩': '萨', '男': '男', '子': '子', '女': '女', '人': '人', '阿': '阿', '耨': '耨', '多': '多', '羅': '罗', '三': '三', '藐': '藐', '提': '提', '心': '心', '云': '云', '何': '何', '哉': '哉', '汝': '汝', '所': '所', '說': '说', '今': '今', '當': '当', '為': '为', '唯': '唯', '然': '然'
+    };
+    
+    let result = text;
+    for (const [traditional, simplified] of Object.entries(traditionalToSimplified)) {
+      result = result.replace(new RegExp(traditional, 'g'), simplified);
+    }
+    return result;
+  };
+
   // 完整的經文數據（包含內容和解釋）
+  
   const sutraSections = [
-      {
+    {
       id: 1,
       title: "法會因由分第一",
       content: "如是我聞：一時，佛在舍衛國祇樹給孤獨園，與大比丘眾千二百五十人俱。爾時，世尊食時，著衣持缽，入舍衛大城乞食。於其城中次第乞已，還至本處。飯食訖，收衣缽。洗足已，敷座而坐。",
@@ -333,8 +348,12 @@ const App = () => {
         <View style={styles.content}>
           {/* 標題區域 */}
           <View style={styles.header}>
-            <Text style={styles.mainTitle}>《金剛般若波羅蜜經》</Text>
-            <Text style={styles.subTitle}>鳩摩羅什法師譯</Text>
+                      <Text style={styles.mainTitle}>
+            {isTraditional ? '《金剛般若波羅蜜經》' : '《金刚般若波罗蜜经》'}
+          </Text>
+          <Text style={styles.subTitle}>
+            {isTraditional ? '鳩摩羅什法師譯' : '鸠摩罗什法师译'}
+          </Text>
           </View>
 
           {/* 按鈕區域 */}
@@ -343,14 +362,18 @@ const App = () => {
               style={[styles.button, { backgroundColor: '#8B4513' }]}
               onPress={() => goToPage('pageReader')}
             >
-              <Text style={styles.buttonText}>金剛經（翻頁版）</Text>
+              <Text style={styles.buttonText}>
+                {isTraditional ? '金剛經（翻頁版）' : '金刚经（翻页版）'}
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.button, { backgroundColor: '#A0522D' }]}
               onPress={() => goToPage('longPageReader')}
             >
-              <Text style={styles.buttonText}>金剛經（滾字版）</Text>
+              <Text style={styles.buttonText}>
+                {isTraditional ? '金剛經（滾字版）' : '金刚经（滚字版）'}
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -364,20 +387,26 @@ const App = () => {
               style={[styles.button, { backgroundColor: '#D2691E' }]}
               onPress={() => goToPage('settings')}
             >
-              <Text style={styles.buttonText}>設定</Text>
+              <Text style={styles.buttonText}>
+                {isTraditional ? '設定' : '设定'}
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.button, { backgroundColor: '#B8860B' }]}
               onPress={() => goToPage('share')}
             >
-              <Text style={styles.buttonText}>分享</Text>
+              <Text style={styles.buttonText}>
+                {isTraditional ? '分享' : '分享'}
+              </Text>
             </TouchableOpacity>
           </View>
 
           {/* 底部裝飾 */}
           <View style={styles.footer}>
-            <Text style={styles.footerText}>願以此功德，普及於一切</Text>
+            <Text style={styles.footerText}>
+              {isTraditional ? '願以此功德，普及於一切' : '愿以此功德，普及于一切'}
+            </Text>
           </View>
         </View>
       </SafeAreaView>
@@ -425,27 +454,45 @@ const App = () => {
           </TouchableOpacity>
 
           {/* 設定標題 */}
-          <Text style={styles.settingsTitle}>設定</Text>
+          <Text style={styles.settingsTitle}>
+            {isTraditional ? '設定' : '设定'}
+          </Text>
 
           {/* 設定選項 */}
           <View style={styles.settingsContainer}>
             {/* 簡繁體切換 */}
             <View style={styles.settingItem}>
-              <Text style={styles.settingLabel}>簡繁體切換</Text>
+              <Text style={styles.settingLabel}>
+                {isTraditional ? '簡繁體切換' : '简繁体切换'}
+              </Text>
               <View style={styles.settingControl}>
-                <Text style={styles.settingValue}>{isTraditional ? '繁體' : '簡體'}</Text>
-                <Switch
-                  value={isTraditional}
-                  onValueChange={setIsTraditional}
-                  trackColor={{ false: '#767577', true: '#8B4513' }}
-                  thumbColor={isTraditional ? '#f4f3f4' : '#f4f3f4'}
-                />
+                <Text style={styles.settingValue}>
+                  {isTraditional ? '繁體' : '簡體'} (狀態: {isTraditional.toString()})
+                </Text>
+                <TouchableOpacity 
+                  style={[
+                    styles.customSwitch, 
+                    isTraditional && styles.customSwitchActive
+                  ]}
+                  onPress={() => {
+                    console.log('Custom switch pressed, current:', isTraditional);
+                    setIsTraditional(!isTraditional);
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <View style={[
+                    styles.customSwitchThumb,
+                    isTraditional && styles.customSwitchThumbActive
+                  ]} />
+                </TouchableOpacity>
               </View>
             </View>
 
             {/* 字體大小 */}
             <View style={styles.settingItem}>
-              <Text style={styles.settingLabel}>字體大小</Text>
+              <Text style={styles.settingLabel}>
+                {isTraditional ? '字體大小' : '字体大小'}
+              </Text>
               <View style={styles.settingControl}>
                 <TouchableOpacity
                   style={styles.sizeButton}
@@ -465,22 +512,52 @@ const App = () => {
 
             {/* 字體選擇 */}
             <View style={styles.settingItem}>
-              <Text style={styles.settingLabel}>字體選擇</Text>
-              <View style={styles.settingControl}>
+              <Text style={styles.settingLabel}>
+                {isTraditional ? '字體選擇' : '字体选择'} (當前: {selectedFont})
+              </Text>
+              <View style={styles.fontSelectionContainer}>
                 <TouchableOpacity
-                  style={styles.fontButton}
-                  onPress={() => setSelectedFont('系統字體')}
+                  style={[styles.fontButton, selectedFont === '系統字體' && styles.selectedFont]}
+                  onPress={() => {
+                    console.log('選擇字體: 系統字體');
+                    setSelectedFont('系統字體');
+                  }}
                 >
-                  <Text style={[styles.fontButtonText, selectedFont === '系統字體' && styles.selectedFont]}>
-                    系統字體
+                  <Text style={[styles.fontButtonText, selectedFont === '系統字體' && styles.selectedFontText]}>
+                    {isTraditional ? '系統字體' : '系统字体'}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.fontButton}
-                  onPress={() => setSelectedFont('楷體')}
+                  style={[styles.fontButton, selectedFont === '楷體' && styles.selectedFont]}
+                  onPress={() => {
+                    console.log('選擇字體: 楷體');
+                    setSelectedFont('楷體');
+                  }}
                 >
-                  <Text style={[styles.fontButtonText, selectedFont === '楷體' && styles.selectedFont]}>
-                    楷體
+                  <Text style={[styles.fontButtonText, selectedFont === '楷體' && styles.selectedFontText]}>
+                    {isTraditional ? '楷體' : '楷体'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.fontButton, selectedFont === '宋體' && styles.selectedFont]}
+                  onPress={() => {
+                    console.log('選擇字體: 宋體');
+                    setSelectedFont('宋體');
+                  }}
+                >
+                  <Text style={[styles.fontButtonText, selectedFont === '宋體' && styles.selectedFontText]}>
+                    {isTraditional ? '宋體' : '宋体'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.fontButton, selectedFont === '黑體' && styles.selectedFont]}
+                  onPress={() => {
+                    console.log('選擇字體: 黑體');
+                    setSelectedFont('黑體');
+                  }}
+                >
+                  <Text style={[styles.fontButtonText, selectedFont === '黑體' && styles.selectedFontText]}>
+                    {isTraditional ? '黑體' : '黑体'}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -489,7 +566,9 @@ const App = () => {
 
           {/* 底部說明 */}
           <View style={styles.settingsFooter}>
-            <Text style={styles.footerText}>設定會自動保存</Text>
+            <Text style={styles.footerText}>
+              {isTraditional ? '設定會自動保存' : '设定会自动保存'}
+            </Text>
           </View>
         </View>
       </SafeAreaView>
@@ -502,6 +581,20 @@ const App = () => {
     const currentSectionData = sutraSections[currentSection - 1];
     const currentSectionText = currentSectionData.content;
     
+    // 根據選中的字體設置字體樣式
+    const getFontFamily = () => {
+      switch (selectedFont) {
+        case '楷體':
+          return 'PingFangSC-Light'; // iOS 支援的蘋方字體
+        case '宋體':
+          return 'PingFangSC-Regular'; // iOS 支援的蘋方字體
+        case '黑體':
+          return 'PingFangSC-Medium'; // iOS 支援的蘋方字體
+        default:
+          return undefined; // 系統字體
+      }
+    };
+    
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.pageReaderContent}>
@@ -510,7 +603,9 @@ const App = () => {
             <TouchableOpacity style={styles.backButton} onPress={goHome}>
               <Text style={styles.backButtonText}>返回首頁</Text>
             </TouchableOpacity>
-            <Text style={styles.sectionTitle}>金剛經（翻頁版）</Text>
+            <Text style={styles.sectionTitle}>
+              {isTraditional ? '金剛經（翻頁版）' : '金刚经（翻页版）'}
+            </Text>
             <TouchableOpacity 
               style={[
                 styles.bookmarkButton, 
@@ -529,16 +624,18 @@ const App = () => {
 
           {/* 經文內容 */}
           <ScrollView style={styles.sutraContent} contentContainerStyle={styles.sutraContentContainer}>
-            {/* 經文標題 */}
-            <Text style={styles.sutraTitle}>{currentSectionData.title}</Text>
+                      {/* 經文標題 */}
+          <Text style={[styles.sutraTitle, { fontFamily: getFontFamily() }]}>
+            {isTraditional ? currentSectionData.title : convertToSimplified(currentSectionData.title)}
+          </Text>
             
             <TouchableOpacity 
               style={styles.sutraTextContainer}
               onPress={() => setShowExplanation(!showExplanation)}
               activeOpacity={0.8}
             >
-              <Text style={[styles.sutraText, { fontSize: fontSize }]}>
-                {currentSectionText}
+              <Text style={[styles.sutraText, { fontSize: fontSize, fontFamily: getFontFamily() }]}>
+                {isTraditional ? currentSectionText : convertToSimplified(currentSectionText)}
               </Text>
               
 
@@ -569,7 +666,7 @@ const App = () => {
                     nestedScrollEnabled={true}
                   >
                     <Text style={styles.explanationModalText}>
-                      {currentSectionData.explanation}
+                      {isTraditional ? currentSectionData.explanation : convertToSimplified(currentSectionData.explanation)}
                     </Text>
                   </ScrollView>
                 </View>
@@ -623,6 +720,20 @@ const App = () => {
 
   // 金剛經（滾字版）頁面
   if (currentPage === 'longPageReader') {
+    // 根據選中的字體設置字體樣式
+    const getFontFamily = () => {
+      switch (selectedFont) {
+        case '楷體':
+          return 'PingFangSC-Light'; // iOS 支援的蘋方字體
+        case '宋體':
+          return 'PingFangSC-Regular'; // iOS 支援的蘋方字體
+        case '黑體':
+          return 'PingFangSC-Medium'; // iOS 支援的蘋方字體
+        default:
+          return undefined; // 系統字體
+      }
+    };
+    
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.longPageReaderContent}>
@@ -631,7 +742,9 @@ const App = () => {
             <TouchableOpacity style={styles.backButton} onPress={goHome}>
               <Text style={styles.backButtonText}>返回首頁</Text>
             </TouchableOpacity>
-            <Text style={styles.sectionTitle}>金剛經（完整版）</Text>
+            <Text style={styles.sectionTitle}>
+              {isTraditional ? '金剛經（完整版）' : '金刚经（完整版）'}
+            </Text>
             <TouchableOpacity style={styles.bookmarkButton}>
               <Text style={styles.bookmarkButtonText}>書籤</Text>
             </TouchableOpacity>
@@ -648,8 +761,8 @@ const App = () => {
               onPress={() => setShowExplanation(!showExplanation)}
               activeOpacity={0.8}
             >
-              <Text style={[styles.longSutraText, { fontSize: fontSize }]}>
-                {sutraSections.map(s => s.content).join('\n\n')}
+              <Text style={[styles.longSutraText, { fontSize: fontSize, fontFamily: getFontFamily() }]}>
+                {sutraSections.map(s => isTraditional ? s.content : convertToSimplified(s.content)).join('\n\n')}
               </Text>
             </TouchableOpacity>
 
@@ -907,11 +1020,34 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingHorizontal: 15,
   },
   settingValue: {
     fontSize: 16,
     color: '#696969',
     fontWeight: '500',
+  },
+
+  customSwitch: {
+    width: 50,
+    height: 30,
+    backgroundColor: '#767577',
+    borderRadius: 15,
+    padding: 2,
+    justifyContent: 'center',
+  },
+  customSwitchActive: {
+    backgroundColor: '#8B4513',
+  },
+  customSwitchThumb: {
+    width: 26,
+    height: 26,
+    backgroundColor: '#f4f3f4',
+    borderRadius: 13,
+    alignSelf: 'flex-start',
+  },
+  customSwitchThumbActive: {
+    alignSelf: 'flex-end',
   },
   sizeButton: {
     backgroundColor: '#8B4513',
@@ -928,7 +1064,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#2F4F4F',
     fontWeight: '600',
-    minWidth: 50,
+    minWidth: 60,
     textAlign: 'center',
   },
   fontButton: {
@@ -938,6 +1074,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#8B4513',
     backgroundColor: 'transparent',
+    minWidth: 80,
+    alignItems: 'center',
   },
   fontButtonText: {
     fontSize: 16,
@@ -946,8 +1084,18 @@ const styles = StyleSheet.create({
   },
   selectedFont: {
     backgroundColor: '#8B4513',
+    borderColor: '#8B4513',
+  },
+  selectedFontText: {
     color: 'white',
   },
+  fontSelectionContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 10,
+  },
+
   settingsFooter: {
     alignItems: 'center',
     marginBottom: 30,
